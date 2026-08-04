@@ -6,15 +6,15 @@ import { Container } from "@/components/ui/container";
 export default function NotFound() {
   return (
     <Container className="py-24 text-center">
-      <h1 className="text-3xl font-bold tracking-tight">Page not found</h1>
+      <h1 className="text-3xl font-bold tracking-tight">Puslapis nerastas</h1>
       <p className="text-muted mt-3">
-        That URL doesn&apos;t exist — or not yet.
+        Tokio puslapio nėra arba jis pašalintas.
       </p>
       <Link
         href="/"
         className={buttonClasses({ variant: "secondary", className: "mt-8" })}
       >
-        Back home
+        Į pradžią
       </Link>
     </Container>
   );

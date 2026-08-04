@@ -1,9 +1,16 @@
 # MPturai
 
+Informational site for our 3D real-estate scanning work: Matterport tour
+portfolio, services, and contact details. Site copy is in Lithuanian.
+
 Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · deployed on Vercel.
 
-Frontend only for now — data comes from `src/lib/data.ts`. Server logic and a
-database get added later without touching the pages.
+Frontend only for now — properties live in `src/data/properties.ts`. A real
+backend gets added later without touching the pages.
+
+> **Conventions are in [AGENTS.md](AGENTS.md) — read it before editing.**
+> Claude Code loads it automatically through `CLAUDE.md`, so all three of us
+> get the same rules.
 
 ## Getting started
 
@@ -14,6 +21,20 @@ npm run dev
 ```
 
 Open http://localhost:3000.
+
+## Adding a property
+
+Edit **`src/data/properties.ts`** and nothing else. The listing page, the
+`/objektai/<slug>` page and its metadata are all generated from that array.
+
+`matterportId` is the `m=` value from a Matterport share link:
+`https://my.matterport.com/show/?m=SxQL3iGyoDo` → `"SxQL3iGyoDo"`.
+
+Photos are optional — drop them in `public/objektai/` and set `image`.
+Without one, the card falls back to a colour placeholder.
+
+⚠️ The file currently holds **example** entries marked `PAVYZDYS`. Replace them
+with real tours before showing the site to clients.
 
 ## Scripts
 
@@ -26,57 +47,50 @@ Open http://localhost:3000.
 | `npm run typecheck` | TypeScript, no output                  |
 | `npm run format`    | Prettier, writes changes               |
 
-Run `npm run lint && npm run typecheck` before every push — CI runs the same
-checks and will block the PR otherwise.
+Run all of them before pushing — CI runs the same checks and will fail the PR
+otherwise.
 
 ## Structure
 
 ```
 src/
-  app/                 routes — folder + page.tsx = a URL
-    layout.tsx         shell: header + footer, wraps every page
-    page.tsx           /
-    dashboard/page.tsx /dashboard
-    about/page.tsx     /about
-    error.tsx          shown when a page throws
-    loading.tsx        shown while a page's data loads
-    not-found.tsx      404
-    globals.css        design tokens + Tailwind import
+  app/                      routes — folder + page.tsx = a URL
+    layout.tsx              shell: header + footer, wraps every page
+    page.tsx                /
+    objektai/page.tsx       /objektai         — portfolio list
+    objektai/[slug]/page.tsx  /objektai/<slug> — one tour, generated per property
+    paslaugos/page.tsx      /paslaugos        — services
+    kontaktai/page.tsx      /kontaktai        — contact details
+    error.tsx               shown when a page throws
+    loading.tsx             shown while a page's data loads
+    not-found.tsx           404
+    globals.css             design tokens + Tailwind import
   components/
-    ui/                button, card, container
-    layout/            site header, site footer
+    ui/                     button, card, container
+    layout/                 site header, site footer
+    property-card.tsx       portfolio card
+    matterport-embed.tsx    responsive 3D tour iframe
+  data/
+    properties.ts           the tours — content, not code
   lib/
-    config.ts          app name, description, nav links
-    data.ts            temporary mock data (swap for a real backend here)
-    utils.ts           cn(), formatDate()
-  types/               shared TypeScript types
+    config.ts               company name, contacts, nav
+    properties.ts           data access (swap for a real backend here)
+    utils.ts                cn(), formatDate()
+  types/                    shared TypeScript types
 ```
-
-## Adding a page
-
-Create `src/app/settings/page.tsx`:
-
-```tsx
-export default function SettingsPage() {
-  return <div>Settings</div>;
-}
-```
-
-That's it — `/settings` now exists. Add it to `nav` in `src/lib/config.ts` to
-put it in the header.
 
 ## Styling
 
-Colors are CSS variables in `src/app/globals.css`, exposed to Tailwind through
-`@theme inline`. Use `bg-surface`, `text-muted`, `border-border` and friends.
-Don't hardcode hex values in components — add a token instead, and dark mode
+Colours are CSS variables in `src/app/globals.css`, exposed to Tailwind through
+`@theme inline`. Use `bg-surface`, `text-muted`, `border-border`, `text-accent`.
+Never hardcode a hex value in a component — add a token instead and dark mode
 keeps working for free.
 
 ## Deployment
 
-Every push to a branch gets a Vercel **preview URL** on its pull request.
-Merging to `main` deploys to production. Environment variables are set in the
-Vercel dashboard — `.env.local` is local-only and never committed.
+Every branch gets a Vercel **preview URL** on its pull request. Merging to
+`main` deploys to production. Environment variables are set in the Vercel
+dashboard — `.env.local` is local-only and never committed.
 
 ## Team
 

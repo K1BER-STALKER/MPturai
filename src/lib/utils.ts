@@ -2,18 +2,19 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Merge Tailwind class names safely.
- * Later classes win over earlier ones, so components can accept a `className`
- * prop that overrides their defaults.
+ * Sujungia Tailwind klases saugiai — vėlesnės klasės nugali ankstesnes,
+ * todėl komponentai gali priimti `className` ir leisti perrašyti numatytas
+ * reikšmes.
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Data lietuvišku formatu, pvz. „2026 m. liepos 14 d.". */
 export function formatDate(date: Date | string) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("lt-LT", {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
   }).format(new Date(date));
 }
